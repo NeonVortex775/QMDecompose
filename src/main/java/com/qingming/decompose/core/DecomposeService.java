@@ -18,10 +18,16 @@ import java.util.UUID;
 /** The station itself: read the slots, match, consume, pay out, refund. */
 public class DecomposeService {
 
+    public static final int INSERT_OK = 0;
+    public static final int INSERT_NO_MATCH = 1;
+    public static final int INSERT_FULL = 2;
+
     private final DecomposePlugin plugin;
     private final Map<UUID, long[]> timeCache = new HashMap<UUID, long[]>();
     private final Map<UUID, Long> lastRun = new HashMap<UUID, Long>();
     private final Map<UUID, String[]> snapCache = new HashMap<UUID, String[]>();
+
+    private final Map<UUID, Long> aliveAt = new HashMap<UUID, Long>();
 
     public DecomposeService(DecomposePlugin plugin) {
         this.plugin = plugin;
@@ -56,6 +62,97 @@ public class DecomposeService {
     public void invalidateAll() {
         timeCache.clear();
         snapCache.clear();
+    }
+
+    public void markAlive(Player player) {
+        if (player != null) {
+            aliveAt.put(player.getUniqueId(), System.currentTimeMillis());
+        }
+    }
+
+    public void clearAlive(Player player) {
+        if (player != null) {
+            aliveAt.remove(player.getUniqueId());
+        }
+    }
+
+    public boolean guiOpen(Player player) {
+        if (player == null) {
+            return false;
+        }
+        Long t = aliveAt.get(player.getUniqueId());
+        if (t == null) {
+            return false;
+        }
+        long ms = Math.max(1000L, plugin.getConfig().getLong("settings.gui-alive-ms", 3000L));
+        return System.currentTimeMillis() - t <= ms;
+    }
+
+    public int shiftInsert(Player player, int invIndex) {
+        if (player == null || invIndex < 0) {
+            return INSERT_NO_MATCH;
+        }
+        ItemStack src = player.getInventory().getItem(invIndex);
+        if (Items.empty(src)) {
+            return INSERT_NO_MATCH;
+        }
+
+        if (plugin.getConfig().getBoolean("settings.shift-insert-match-only", true)
+                && plugin.tables().find(src) == null) {
+            return INSERT_NO_MATCH;
+        }
+
+        int max = Math.max(1, src.getMaxStackSize());
+        int remain = src.getAmount();
+
+        for (String slot : slots()) {
+            if (remain <= 0) {
+                break;
+            }
+            ItemStack cur = get(player, slot);
+            if (cur == null || !cur.isSimilar(src)) {
+                continue;
+            }
+            int space = max - cur.getAmount();
+            if (space <= 0) {
+                continue;
+            }
+            int n = Math.min(space, remain);
+            ItemStack put = cur.clone();
+            put.setAmount(cur.getAmount() + n);
+            set(player, slot, put);
+            remain -= n;
+        }
+
+        for (String slot : slots()) {
+            if (remain <= 0) {
+                break;
+            }
+            if (get(player, slot) != null) {
+                continue;
+            }
+            int n = Math.min(max, remain);
+            ItemStack put = src.clone();
+            put.setAmount(n);
+            set(player, slot, put);
+            remain -= n;
+        }
+
+        int moved = src.getAmount() - remain;
+        if (moved <= 0) {
+            return INSERT_FULL;
+        }
+        if (remain <= 0) {
+            player.getInventory().setItem(invIndex, null);
+        } else {
+            ItemStack left = src.clone();
+            left.setAmount(remain);
+            player.getInventory().setItem(invIndex, left);
+        }
+
+        player.updateInventory();
+        invalidate(player.getUniqueId());
+        return INSERT_OK;
     }
 
     public String[] snapshot(Player player) {

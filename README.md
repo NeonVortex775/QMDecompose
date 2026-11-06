@@ -95,6 +95,29 @@ file name. A single material list entry can carry a data value (`WOOL:14`).
 
 The button turns grey while no slot holds anything usable; that state comes from `%qmfx_state%`.
 
+## Filling the slots without dragging
+
+Shift + left or right click on an item in the player inventory moves the whole stack into the slots.
+Existing stacks of the same item are topped up first, empty slots only get used once those are full,
+so a slot holding 10 of the item is filled to 64 before a free slot is claimed. Whatever does not fit
+stays where it was - three free slots take 192 items, the rest is left in the inventory untouched.
+
+Nothing is moved when the item has no table, or when there is no room left; both cases send the
+message from `messages.shift-no-match` / `messages.shift-full` and play `sounds.fail`. A successful
+insert plays `sounds.insert`.
+
+Two settings control it:
+
+| Key | Default | Meaning |
+| --- | --- | --- |
+| `settings.shift-insert` | `true` | turn the shortcut off entirely |
+| `settings.shift-insert-match-only` | `true` | only items that have a table may be inserted |
+| `settings.gui-alive-ms` | `3000` | how long the screen counts as open without a heartbeat |
+
+The screen is considered open while the `Functions.open` block keeps polling the placeholders; the
+timer starts when the GUI is opened and stops on `/qmfx close`, death or logout. Shift click does
+nothing when the station is not open, so the shortcut cannot be used from a normal chest.
+
 ## Placeholders
 
 | Placeholder | Value |

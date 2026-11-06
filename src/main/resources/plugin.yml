@@ -1,6 +1,6 @@
 name: QingMingDecompose
 main: com.qingming.decompose.DecomposePlugin
-version: 1.0.0
+version: 1.0.1
 author: QingMing
 api-version: 1.12
 softdepend: [DragonCore, PlaceholderAPI]

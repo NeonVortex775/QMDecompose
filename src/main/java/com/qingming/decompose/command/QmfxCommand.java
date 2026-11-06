@@ -136,6 +136,8 @@ public class QmfxCommand implements CommandExecutor, TabCompleter {
                 return true;
             }
             Player p = (Player) sender;
+
+            plugin.service().clearAlive(p);
             int n = plugin.service().returnAll(p);
             if (n > 0) {
                 p.sendMessage(Text.color(plugin.msg("returned").replace("{amount}", String.valueOf(n))));

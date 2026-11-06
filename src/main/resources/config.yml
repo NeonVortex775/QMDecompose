@@ -20,6 +20,12 @@ slots:
   - "分解输入12"
 
 settings:
+  # Shift + 点背包里的物品，直接把整摞放进分解格
+  shift-insert: true
+  # 只让「有分解表」的物品快插进去；改成 false 就什么都能塞
+  shift-insert-match-only: true
+  # 界面心跳超时（毫秒）：界面每 500ms 拉一次变量，超过这个时间没动静就认为界面已经关了
+  gui-alive-ms: 3000
   # 关闭界面时把格子里的东西退回背包
   close-return: true
   # 退出游戏时退回
@@ -33,6 +39,7 @@ sounds:
   decompose: "ENTITY_PLAYER_LEVELUP"
   fail: "BLOCK_ANVIL_LAND"
   return-item: "ENTITY_ITEM_PICKUP"
+  insert: "UI_BUTTON_CLICK"
 
 messages:
   prefix: "§8[§b分解§8] §r"
@@ -45,3 +52,5 @@ messages:
   reloaded: "§a已重载 {count} 张分解表"
   player-only: "§c该命令只能由玩家执行。"
   opened: "§a已打开分解台"
+  shift-no-match: "§c这件东西没有分解配方，放进去也只会退回"
+  shift-full: "§c分解格已经放满了"

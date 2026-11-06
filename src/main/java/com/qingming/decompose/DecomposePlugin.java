@@ -68,7 +68,8 @@ public class DecomposePlugin extends JavaPlugin {
             getCommand("qmfx").setTabCompleter(command);
         }
 
-        getLogger().info("青冥分解台已启用（" + tables.getTables().size() + " 张表）");
+        getLogger().info("青冥分解台已启用（" + tables.getTables().size() + " 张表）"
+                + " · Shift 快插背包: " + (getConfig().getBoolean("settings.shift-insert", true) ? "开" : "关"));
     }
 
     @Override
@@ -108,6 +109,10 @@ public class DecomposePlugin extends JavaPlugin {
         }
         try {
             PacketSender.sendOpenGui(player, gui);
+
+            if (service != null) {
+                service.markAlive(player);
+            }
             return true;
         } catch (Throwable t) {
             getLogger().warning("打开界面失败（" + gui + "）: " + t);
