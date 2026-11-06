@@ -1,0 +1,47 @@
+# 青冥分解台
+gui:
+  # DragonCore/Gui/ 下的文件名（不含 .yml）。
+  # 注意：龙核按"文件名"打开界面，不是按 yml 里的 match 字段。
+  name: "青冥分解台"
+
+# 分解界面里的自定义槽位 identifier（顺序即格子顺序，必须在 DragonCore/SlotConfig.yml 里登记）
+slots:
+  - "分解输入1"
+  - "分解输入2"
+  - "分解输入3"
+  - "分解输入4"
+  - "分解输入5"
+  - "分解输入6"
+  - "分解输入7"
+  - "分解输入8"
+  - "分解输入9"
+  - "分解输入10"
+  - "分解输入11"
+  - "分解输入12"
+
+settings:
+  # 关闭界面时把格子里的东西退回背包
+  close-return: true
+  # 退出游戏时退回
+  quit-return: true
+  # 单格一次点击最多处理多少次（防止 64 个材料一次爆出几百条产出）
+  max-times-per-slot: 64
+  # 变量缓存毫秒（越小界面刷新越及时，越大越省性能）
+  placeholder-cache-ms: 180
+
+sounds:
+  decompose: "ENTITY_PLAYER_LEVELUP"
+  fail: "BLOCK_ANVIL_LAND"
+  return-item: "ENTITY_ITEM_PICKUP"
+
+messages:
+  prefix: "§8[§b分解§8] §r"
+  no-item: "§7格子里没有东西。"
+  no-match: "§c没有可分解的物品，已退回背包。"
+  success: "§a分解完成 §7· §f消耗 {amount} 件 §7· §f产出 {outputs} 项"
+  returned: "§e有 {amount} 件物品无法分解，已退回背包"
+  full-inventory: "§c背包已满，物品掉落在脚下"
+  no-permission: "§c你没有权限。"
+  reloaded: "§a已重载 {count} 张分解表"
+  player-only: "§c该命令只能由玩家执行。"
+  opened: "§a已打开分解台"

@@ -1,0 +1,34 @@
+# ===========================================================
+# 示例二：按「NBT」匹配（适合 NeigeItems / 自写 NBT 物品）
+#   NeigeItems 物品的 ID 存在 NBT: NeigeItems.id
+# ===========================================================
+
+id: yaodan
+display: "&6妖丹分解"
+priority: 20
+
+# 一颗妖丹出 1 份产出
+consume: 1
+max-times: 64
+
+match:
+  # 先限定材质（可选，去掉会更快匹配但更容易误伤）
+  material:
+    - ROTTEN_FLESH
+    - BONE
+    - BLAZE_POWDER
+
+  # NBT 条件：支持 a.b.c 嵌套路径
+  # 值支持：精确、通配 *、比较 >= <= > < !=
+  nbt:
+    NeigeItems:
+      id: "yaodan*"
+
+outputs:
+  - item:
+      material: GLOWSTONE_DUST
+      amount: 2
+      name: "&6妖丹粉末"
+      glow: true
+  - command: "ni giveslient %player% 妖丹碎片 1"
+    chance: 25

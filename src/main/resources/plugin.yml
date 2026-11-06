@@ -1,0 +1,23 @@
+name: QingMingDecompose
+main: com.qingming.decompose.DecomposePlugin
+version: 1.0.0
+author: QingMing
+api-version: 1.12
+softdepend: [DragonCore, PlaceholderAPI]
+
+commands:
+  qmfx:
+    description: 青冥分解台
+    usage: /qmfx <open|reload|list|info|take|c|close>
+    aliases: [fenjie, qmf]
+
+permissions:
+  qmfx.use:
+    description: 使用分解台
+    default: true
+  qmfx.open:
+    description: 打开分解界面（可对他人）
+    default: op
+  qmfx.admin:
+    description: 重载与调试
+    default: op

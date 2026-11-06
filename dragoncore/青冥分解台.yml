@@ -1,0 +1,505 @@
+# 青冥分解台 —— 龙之核心自定义界面
+# 贴图：资源包 DragonCore/分解/*.png ；变量由 QingMingDecompose 插件提供（qmfx_*）
+# 画布 860x366：左侧 12 个分解格 + 分解按钮，右侧玩家背包 9x3 + 快捷栏 9x1
+#
+# 注意：龙核按【文件名】打开界面，不是按 match 字段。
+# 打开标识 = 青冥分解台，可用 /dragoncore opengui 玩家名 青冥分解台 测试。
+match: "青冥分解台"
+# 必须为 false：ESC 由下面的 keyPress 接管，先把格子里的东西还回背包再关界面
+allowEscClose: false
+
+Functions:
+  # 界面打开后立刻同步一次变量
+  open: "方法.异步执行方法('刷新变量')"
+  # 客户端不知道服务端变量，必须主动向服务端拉取；面板显示期间每 500ms 拉一次
+  刷新变量: |-
+    方法.更新变量值('qmfx_state','qmfx_msg');
+    方法.延时(500);
+    方法.异步执行方法('刷新变量');
+  # 按 ESC：先让服务端把格子里剩下的东西还回背包，再关界面
+  keyPress: "(方法.取当前按下键=='ESCAPE')?{方法.聊天('/qmfx close');方法.延时(150);方法.关闭界面;}:0"
+
+背景_texture:
+  x: "(w-860)/2"
+  y: "(h-366)/2"
+  width: 860
+  height: 366
+  texture: "分解/背景.png"
+  alpha: "方法.取界面存活时间/300"
+
+# ===== 12 个分解格（自定义槽位，需在 SlotConfig.yml 登记） =====
+分解格1_slot:
+  x: "背景_texture.x+120"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "分解输入1"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+  tip: ["§6分解台 · 分解格", "§7把要分解的物品拖进来", "§8关闭界面时自动退回背包"]
+
+分解格2_slot:
+  x: "背景_texture.x+158"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "分解输入2"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+分解格3_slot:
+  x: "背景_texture.x+196"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "分解输入3"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+分解格4_slot:
+  x: "背景_texture.x+234"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "分解输入4"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+分解格5_slot:
+  x: "背景_texture.x+272"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "分解输入5"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+分解格6_slot:
+  x: "背景_texture.x+310"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "分解输入6"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+分解格7_slot:
+  x: "背景_texture.x+120"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "分解输入7"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+分解格8_slot:
+  x: "背景_texture.x+158"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "分解输入8"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+分解格9_slot:
+  x: "背景_texture.x+196"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "分解输入9"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+分解格10_slot:
+  x: "背景_texture.x+234"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "分解输入10"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+分解格11_slot:
+  x: "背景_texture.x+272"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "分解输入11"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+分解格12_slot:
+  x: "背景_texture.x+310"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "分解输入12"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+# ===== 玩家背包 9x3（container_9..35，可直接拖到上方分解格） =====
+背包_9_slot:
+  x: "背景_texture.x+406"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "container_9"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_10_slot:
+  x: "背景_texture.x+444"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "container_10"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_11_slot:
+  x: "背景_texture.x+482"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "container_11"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_12_slot:
+  x: "背景_texture.x+520"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "container_12"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_13_slot:
+  x: "背景_texture.x+558"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "container_13"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_14_slot:
+  x: "背景_texture.x+596"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "container_14"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_15_slot:
+  x: "背景_texture.x+634"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "container_15"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_16_slot:
+  x: "背景_texture.x+672"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "container_16"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_17_slot:
+  x: "背景_texture.x+710"
+  y: "背景_texture.y+94"
+  width: 31
+  height: 31
+  identifier: "container_17"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_18_slot:
+  x: "背景_texture.x+406"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "container_18"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_19_slot:
+  x: "背景_texture.x+444"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "container_19"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_20_slot:
+  x: "背景_texture.x+482"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "container_20"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_21_slot:
+  x: "背景_texture.x+520"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "container_21"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_22_slot:
+  x: "背景_texture.x+558"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "container_22"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_23_slot:
+  x: "背景_texture.x+596"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "container_23"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_24_slot:
+  x: "背景_texture.x+634"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "container_24"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_25_slot:
+  x: "背景_texture.x+672"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "container_25"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_26_slot:
+  x: "背景_texture.x+710"
+  y: "背景_texture.y+132"
+  width: 31
+  height: 31
+  identifier: "container_26"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_27_slot:
+  x: "背景_texture.x+406"
+  y: "背景_texture.y+170"
+  width: 31
+  height: 31
+  identifier: "container_27"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_28_slot:
+  x: "背景_texture.x+444"
+  y: "背景_texture.y+170"
+  width: 31
+  height: 31
+  identifier: "container_28"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_29_slot:
+  x: "背景_texture.x+482"
+  y: "背景_texture.y+170"
+  width: 31
+  height: 31
+  identifier: "container_29"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_30_slot:
+  x: "背景_texture.x+520"
+  y: "背景_texture.y+170"
+  width: 31
+  height: 31
+  identifier: "container_30"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_31_slot:
+  x: "背景_texture.x+558"
+  y: "背景_texture.y+170"
+  width: 31
+  height: 31
+  identifier: "container_31"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_32_slot:
+  x: "背景_texture.x+596"
+  y: "背景_texture.y+170"
+  width: 31
+  height: 31
+  identifier: "container_32"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_33_slot:
+  x: "背景_texture.x+634"
+  y: "背景_texture.y+170"
+  width: 31
+  height: 31
+  identifier: "container_33"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_34_slot:
+  x: "背景_texture.x+672"
+  y: "背景_texture.y+170"
+  width: 31
+  height: 31
+  identifier: "container_34"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+背包_35_slot:
+  x: "背景_texture.x+710"
+  y: "背景_texture.y+170"
+  width: 31
+  height: 31
+  identifier: "container_35"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+# ===== 快捷栏 9x1（container_36..44） =====
+快捷栏_36_slot:
+  x: "背景_texture.x+406"
+  y: "背景_texture.y+214"
+  width: 31
+  height: 31
+  identifier: "container_36"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+快捷栏_37_slot:
+  x: "背景_texture.x+444"
+  y: "背景_texture.y+214"
+  width: 31
+  height: 31
+  identifier: "container_37"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+快捷栏_38_slot:
+  x: "背景_texture.x+482"
+  y: "背景_texture.y+214"
+  width: 31
+  height: 31
+  identifier: "container_38"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+快捷栏_39_slot:
+  x: "背景_texture.x+520"
+  y: "背景_texture.y+214"
+  width: 31
+  height: 31
+  identifier: "container_39"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+快捷栏_40_slot:
+  x: "背景_texture.x+558"
+  y: "背景_texture.y+214"
+  width: 31
+  height: 31
+  identifier: "container_40"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+快捷栏_41_slot:
+  x: "背景_texture.x+596"
+  y: "背景_texture.y+214"
+  width: 31
+  height: 31
+  identifier: "container_41"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+快捷栏_42_slot:
+  x: "背景_texture.x+634"
+  y: "背景_texture.y+214"
+  width: 31
+  height: 31
+  identifier: "container_42"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+快捷栏_43_slot:
+  x: "背景_texture.x+672"
+  y: "背景_texture.y+214"
+  width: 31
+  height: 31
+  identifier: "container_43"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+快捷栏_44_slot:
+  x: "背景_texture.x+710"
+  y: "背景_texture.y+214"
+  width: 31
+  height: 31
+  identifier: "container_44"
+  scale: 1.0
+  alpha: "方法.取界面存活时间/300"
+
+# ===== 分解按钮 =====
+按钮_texture:
+  x: "背景_texture.x+118"
+  y: "背景_texture.y+206"
+  width: 225
+  height: 82
+  texture: "分解/按钮_普通.png"
+  textureHovered: "分解/按钮_悬停.png"
+  alpha: "方法.取界面存活时间/300"
+  visible: "方法.取变量('qmfx_state')==1"
+  tip: ["§a点击开始分解"]
+  actions:
+    click: "方法.聊天('/qmfx c')"
+按钮禁用_texture:
+  x: "背景_texture.x+118"
+  y: "背景_texture.y+206"
+  width: 225
+  height: 82
+  texture: "分解/按钮_禁用.png"
+  alpha: "方法.取界面存活时间/300"
+  visible: "方法.取变量('qmfx_state')!=1"
+  tip: ["§7放入可分解的物品后才会亮起"]
+
+# ===== 状态行（左，按钮下方） =====
+状态_label:
+  x: "背景_texture.x+230"
+  y: "背景_texture.y+322"
+  center: true
+  scale: 1.05
+  alpha: "方法.取界面存活时间/300"
+  texts: "方法.取变量('qmfx_msg')"
+
+# ===== 右下提示（背包下方） =====
+提示_label:
+  x: "背景_texture.x+570"
+  y: "背景_texture.y+322"
+  center: true
+  scale: 1.0
+  alpha: "方法.取界面存活时间/380"
+  texts: "§7拖动背包里的物品到左侧格子"
